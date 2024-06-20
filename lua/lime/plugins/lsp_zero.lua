@@ -4,11 +4,12 @@ return {
         'VonHeikemen/lsp-zero.nvim', branch = 'v3.x',
         dependencies = {
             'neovim/nvim-lspconfig',
-            'hrsh6th/cmp-nvim-lsp',
+            'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/nvim-cmp',
             'L3MON4D3/LuaSnip',
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
+            "j-hui/fidget.nvim",
         },
         config = function()
             local lsp_zero = require('lsp-zero')
@@ -24,16 +25,18 @@ return {
                 lsp_zero.default_keymaps({buffer = bufnr})
             end)
 
+            local lspconfig = require("lspconfig")
+
+            require("fidget").setup({})
             require('mason').setup({})
             require('mason-lspconfig').setup({
-                ensure_installed = {"lua_ls"},
+                ensure_installed = {"lua_ls", "tsserver", "pkgbuild_language_server"},
                 handlers = {
                     function(server_name)
                         require('lspconfig')[server_name].setup({})
                     end,
 
                     ["lua_ls"] = function ()
-                        local lspconfig = require("lspconfig")
                         lspconfig.lua_ls.setup {
                             capabilities = capabilities,
                             settings = {
@@ -44,7 +47,14 @@ return {
                                 }
                             }
                         }
+                    end,
 
+                    ["tsserver"] = function ()
+                        lspconfig.tsserver.setup({})
+                    end,
+
+                    ["pkgbuild_language_server"] = function ()
+                        lspconfig.pkgbuild_language_server.setup({})
                     end,
                 },
             })
