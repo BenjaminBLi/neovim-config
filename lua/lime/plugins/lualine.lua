@@ -4,8 +4,8 @@ return {
     config = function()
         require('lualine').setup({
             options = {
-                theme = 'pywal'
-
+                -- follows the active colorscheme (rose-pine)
+                theme = 'auto'
             }
         })
     end
